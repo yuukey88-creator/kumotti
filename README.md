@@ -18,7 +18,6 @@ PHP・MySQLを使用して開発した投稿型のSNSアプリです。
 
 - HTML
 - CSS
-- JavaScript
 - PHP
 - MySQL
 - Git / GitHub
