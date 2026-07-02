@@ -1,0 +1,951 @@
+@charset "UTF-8";
+/* 1. 全体：空のグラデーションと基本設定 */
+
+body {
+    background: linear-gradient(135deg, #d6eaf8 0%, #a9d9ec 100%) fixed;
+    font-family: "Hiragino Maru Gothic ProN", "Hiragino Kaku Gothic ProN", sans-serif;
+    color: #334455;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px auto;
+    gap: 20px;
+}
+@media screen and (max-width:820px){
+
+.container{
+    flex-direction: column;
+    gap:10px;
+}
+}
+
+.required {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+}
+
+
+/* 2. 左サイドバー：透過ガラスのデザイン */
+.left {
+    position: fixed;
+    left: 40px;
+    top: 20px;
+    width: 200px;
+    height: calc(100vh - 50px);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px); /* すりガラス効果 */
+    border-radius: 30px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 100;
+    overflow-y:auto;
+
+    /* スマホでの動きの土台 */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2000; /* ボタン(1001)よりさらに上にしたい場合は調整 */
+    color: #2c3e50;
+}
+
+.left p,
+.left div {
+    color: #2c3e50;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+.left a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color:#2c3e50;
+    font-weight: bold;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.left a:hover {
+    background: rgba(173, 216, 230, 0.5);
+    transform: translateX(5px);
+}
+
+/* 特別な「モクモク（投稿）」ボタン */
+.left a[href="index.php"] {
+    background: #4a90e2;
+    color: #fff;
+    border-radius: 25px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+/* メニューリンク専用の隙間調整 */
+.menu-links a {
+    padding-top: 5px !important;    /* 上の余白を詰める */
+    padding-bottom: 5px !important; /* 下の余白を詰める */
+    display: block;                  /* 縦に並ぶようにする */
+}
+
+/* もしHTMLに <br> が残っている場合は非表示にする */
+.menu-links br {
+    display: none;
+}
+
+/* 3. 右コンテンツエリア */
+.right {
+    margin-left: 260px;
+    flex: 1;
+    padding-bottom: 100px;
+    min-width: 0;
+}
+
+/* 投稿フォーム */
+form {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 25px;
+    border-radius: 35px;
+    margin-bottom: 40px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+textarea {
+    width: 100%;
+    border: 2px solid #eef2f5;
+    border-radius: 20px;
+    padding: 15px;
+    background: #fff;
+    outline: none;
+    font-size: 16px;
+    min-height: 80px;
+    box-sizing: border-box;
+    resize: vertical; /* 縦方向にだけ広げられるようにする */
+}
+
+/* 本物のファイル選択ボタンを隠す */
+.hidden-file-input {
+    display: none;
+}
+
+/* アイコンをボタンとしてデザイン */
+.file-label {
+    cursor: pointer;
+    display: inline-flex;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.3s;
+}
+
+.file-label:hover {
+    background: rgba(74, 144, 226, 0.1);
+}
+
+.fa-image-icon {
+    width: 24px;
+    height: 24px;
+    fill: #8899aa;
+}
+
+#preview-box {
+    position: relative; /* バツ印の基準点 */
+    display: none;
+    margin-top: 10px;
+}
+
+#image-preview {
+    display: block;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* バツ印を表示する時 */
+#remove-preview.show {
+    display: block !important;
+}
+
+input[type="submit"] {
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+    margin-top: 10px;
+}
+
+/* 投稿欄のフッター（アイコンと送信ボタンを横並びに） */
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+/* フォーム全体のコンテナ */
+.post-form {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    box-sizing: border-box; /* これではみ出しを防止 */
+}
+
+.greeting {
+    font-size: 0.9em;
+    color: #8899aa;
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+/* テキストエリアの調整 */
+.post-form textarea {
+    width: 100%;
+    min-height: 100px;
+    /* border: none; */
+    outline: none;
+    font-size: 1.1em;
+    padding: 10px;
+    resize: none;
+    box-sizing: border-box; /* paddingを含めて幅を計算 */
+    background: transparent;
+}
+
+/* アイコンとボタンが並ぶフッター */
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f0f4f8;
+    padding-top: 15px;
+    margin-top: 10px;
+}
+
+/* ファイルアイコンのデザイン */
+.file-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.file-label:hover {
+    background: #f0f8ff;
+}
+
+.action-icon {
+    width: 24px;
+    height: 24px;
+    fill: #4a90e2; /* くもっちブルー */
+}
+
+/* 投稿ボタン */
+.submit-btn {
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.submit-btn:hover {
+    transform: scale(1.05);
+}
+/* 4. メッセージ（雲のカード） */
+.msg {
+    background: #ffffff;
+    margin-top: 20px;
+    margin-left:auto;  
+    margin-right:auto;
+    padding: 25px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: none; /* 前のborder-imageは解除 */
+    position: relative;
+    transition: transform 0.2s ease;
+    width: 100%;
+    max-width: 700px; /* イメージ画像のサイズ感に合わせる */
+    box-sizing: border-box; /* paddingを含めて計算 */
+   
+    /* ↓ 長い英単語やURLが突き抜けるのを防ぐ */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+@media screen and (max-width:820px){
+
+.msg{
+    max-width:100%;
+}
+}
+
+
+.msg:hover {
+    transform: translateY(-5px);
+}
+
+.msg img{
+    max-width:200px;
+    height:auto;
+}
+/* ここまで */
+
+.msg .member-icon{
+    width: 50px;
+    height: 50px;
+    object-fit: cover; /* どんな比率の顔写真でも中央で切り抜き */
+    border-radius: 50%; /* 円形にする場合 */
+}
+
+/* 投稿本文のスタイル */
+.post-text {
+    /* 改行コード(\n)を反映させ、かつ枠端で自動折り返しする */
+    white-space: pre-wrap;
+    /* 長い英数字（URLなど）が突き抜けるのを防ぐ */
+    word-break: break-all;
+    overflow-wrap: break-word;
+   
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.name {
+    font-weight: bold;
+    color: #334455;
+    font-size: 0.95em;
+}
+
+.msg p {
+    margin: 15px 0;
+    line-height: 1.6;
+    color: #445566;
+    word-break: break-all;
+   
+}
+
+.post-content p {
+    margin: 15px 0;
+    line-height: 1.6;
+    color: #445566;
+    word-break: break-all;
+}
+
+/* 5行制限がかかっている状態 */
+.post-text.is-limit {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5; /* 従来のブラウザ用 */
+    line-clamp: 5;         /* 標準プロパティ（最新ブラウザ用） */
+    overflow: hidden;
+}
+
+.read-more-btn {
+    display: none; /* 初期状態は非表示 */
+    background: none;
+    border: none;
+    color: #4a90e2;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 0.85em;
+    margin-top: -10px; /* 本文との距離を詰める */
+}
+
+/* 開いている時はボタンを「閉じる」にするか隠す設定 */
+.post-content.is-open .read-more-btn {
+    color: #8899aa;
+}
+
+/* 投稿写真 */
+/* .msg img[width="200"] {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+} */
+
+/* 写真選択アイコンのスタイル（必要に応じて） */
+.action-icon {
+    width: 24px;
+    height: 24px;
+    fill: #4a90e2;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.action-icon:hover {
+    transform: scale(1.1);
+}
+
+/* プレビュー画像を表示する枠の調整 */
+#preview-box {
+    margin-top: 15px;
+    display: none; /* 初期状態は非表示 */
+}
+
+#image-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid #eef2f5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* アクションボタン（いいね、返信など） */
+.day {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-top: 1px solid #f0f4f8;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.day a {
+    text-decoration: none;
+    color: #667788;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* いいねリンク全体 */
+.fav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: rgba(255, 107, 129, 0.1); /* 非常に薄いピンク背景 */
+    color: #ff6b81 !important; /* ハートと同じ色 */
+    transition: all 0.2s ease;
+}
+
+.fav-link:hover {
+    background: rgba(255, 107, 129, 0.2);
+    transform: scale(1.05);
+}
+
+/* ハートアイコン */
+.fa-heart-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor; /* 親要素のcolorを引き継ぐ */
+}
+
+/* 数字部分 */
+.fav-count {
+    font-size: 14px;
+}
+
+/* Repostリンク全体 */
+.rp-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: rgba(74, 144, 226, 0.1); /* 薄い水色背景 */
+    color: #4a90e2 ;
+    transition: all 0.2s ease;
+}
+
+.rp-link:hover {
+    background: rgba(74, 144, 226, 0.2);
+    transform: scale(1.05);
+}
+
+.fa-rp-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.rp-count {
+    font-size: 14px;
+}
+
+/* 自分がRPした時の状態 */
+.rp-link.is-active {
+    background: rgba(74, 144, 226, 0.3); /* 背景を少し濃く */
+    color: #2980b9 !important; /* 文字色を濃い青に */
+}
+
+.rp-link.is-active .fa-rp-icon {
+    transform: rotate(180deg); /* 遊び心：RP済みはアイコンを半回転させても可愛い */
+    transition: transform 0.4s ease;
+}
+
+/* 返信リンク全体 */
+.reply-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: rgba(46, 204, 113, 0.1); /* 非常に薄い緑（またはお好みでグレー） */
+    color: #27ae60 !important; /* 文字とアイコンの色 */
+    transition: all 0.2s ease;
+}
+
+.reply-link:hover {
+    background: rgba(46, 204, 113, 0.2);
+    transform: scale(1.05);
+}
+
+.fa-reply-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+.reply-label {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* ゴミ箱アイコン専用の色 */
+.delete-icon {
+    fill: #ff6b81; /* 以前のいいねの色と合わせると統一感が出ます */
+    width: 16px;   /* サイズは他のアイコンに合わせる */
+    height: 16px;
+    vertical-align: middle;
+    transition: transform 0.2s;
+}
+
+.delete-link:hover .delete-icon {
+    fill: #ff3333; /* ホバーで少し濃い赤に */
+    transform: scale(1.2); /* 少し大きくして警告感を出す */
+}
+
+/* ページング */
+.paging {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0;
+}
+
+.paging li a {
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: 4a90e2;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.paging li a:hover {
+    background: 4a90e2;
+    color: #fff;
+}
+.menu-btn {
+    display: none; /* PCでは隠す */
+    position: fixed;
+    bottom: 80px;  /* 下から少し余裕を持たせる */
+    right: 30px;   /* 右から少し余裕を持たせる */
+    width: 50px;
+    height: 50px;
+    background: #4a90e2; /* イメージ画像に合わせた黒 */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001; /* サイドバー(999)より上に */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+
+.menu-btn:active {
+    transform: scale(0.9); /* 押した時にぷにっと縮む */
+}
+
+/* login.php */
+/* ロゴセクションの調整 */
+.logo {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: -60px; /* 下のフォームとの距離を調整（重なり気味にするのが今どき） */
+    position: relative;
+    z-index: 10; /* フォームより上に表示 */
+}
+
+/* ロゴ画像自体のサイズと影 */
+.logo img {
+    max-width: 150px; /* サイズはお好みで */
+    height: auto;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); /* 雲のような浮遊感 */
+}
+
+/* ログイン・会員登録画面のメイン枠 */
+.registration {
+    background: rgba(255, 255, 255, 0.85); /* メインと同じガラス感 */
+    backdrop-filter: blur(10px);
+    max-width: 500px;
+    margin: 80px auto; /* 画面中央に配置 */
+    padding: 40px;
+    border-radius: 40px; /* ぷっくり丸く */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+}
+
+/* 入力欄（メールアドレス・パスワード） */
+.registration input[type="text"],
+.registration input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    border: 2px solid #eef2f5;
+    border-radius: 15px;
+    box-sizing: border-box; /* はみ出し防止 */
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.registration input:focus {
+    border-color: #4a90e2; /* 入力中に青く光らせる */
+}
+
+/* ログインするボタン */
+.registration input[type="submit"] {
+    width: 100%; /* 横いっぱいに広げる */
+    background: #4a90e2; /* メイン画面の青と統一 */
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    float: none; /* index.phpのfloat:rightを打ち消す */
+    margin-top: 10px;
+}
+
+.registration input[type="submit"]:hover {
+    background: #357abd;
+    transform: scale(1.02);
+}
+
+/* エラーメッセージ */
+.error {
+    color: #ff6b81; /* いいねアイコンと同じピンク系で統一 */
+    font-size: 0.85em;
+    margin-top: -15px;
+    margin-bottom: 15px;
+}
+
+/* mypage */
+.mypage_top {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 右レーン内で中央寄せ */
+    text-align: center;
+}
+
+.mypage_icon{
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile_tabs{
+    display: flex;
+    justify-content: center; /* タブを右レーン内で中央寄せ */
+    width: 100%;
+}
+
+.profile_tabs a{
+    flex:1;
+    text-align:center;
+    padding:12px;
+    text-decoration:none;
+    color:#555;
+    font-weight:bold;
+}
+
+.profile_tabs a.active{
+    border-bottom:3px solid #1da1f2;
+    color:#000;
+}
+
+main{
+    padding-top: 20px;
+    width:100%;
+    max-width:900px;
+    margin:0 auto;
+}
+
+/* view.php */
+/* 返信エリア（フォーム）の調整 */
+#reply-area {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 30px;
+    border-radius: 35px;
+    margin-top: 40px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+#reply-area textarea {
+    width: 100%;
+    border: 2px solid #eef2f5;
+    border-radius: 20px;
+    padding: 15px;
+    background: #fff;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+#head h1{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#content p:first-child{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* 返信ボタンをメインの青ボタンと統一 */
+#reply-area input[type="submit"] {
+    background: #4a90e2;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.reply-footer {
+    display: flex;
+    justify-content: space-between; /* プレビュー側とボタンを両端に分ける */
+    align-items: flex-end;         /* 下揃えにする */
+    margin-top: 15px;
+}
+
+/* 現在見ている投稿を少しだけ強調する（任意） */
+.current-post {
+    border: 2px solid #4a90e2 !important;
+    background: #f0f8ff;
+}
+
+/* 「一覧に戻る」のリンクボタン化 */
+.registration a, #content p > a {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    /* 閉じるための×ボタンをサイドバー内に追加（JSで制御） */
+.close-menu {
+    display: none;
+}
+
+/* --- 1. PC・スマホ共通またはPC専用の設定 --- */
+
+/* 「くもっち」の癒やし背景アニメーション */
+body {
+    background-color: #f0f7ff;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640' fill='white' opacity='0.2'%3E%3Cpath d='M112 256C112 167.6 183.6 96 272 96C319.1 96 361.4 116.4 390.7 148.7C401.3 145.6 412.5 144 424 144C490.3 144 544 197.7 544 264C544 277.2 541.9 289.9 537.9 301.8C579.5 322.9 608 366.1 608 416C608 486.7 550.7 544 480 544L176 544C96.5 544 32 479.5 32 400C32 343.2 64.9 294.1 112.7 270.6C112.3 265.8 112 260.9 112 256z'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640' fill='white' opacity='0.15'%3E%3Cpath d='M112 256C112 167.6 183.6 96 272 96C319.1 96 361.4 116.4 390.7 148.7C401.3 145.6 412.5 144 424 144C490.3 144 544 197.7 544 264C544 277.2 541.9 289.9 537.9 301.8C579.5 322.9 608 366.1 608 416C608 486.7 550.7 544 480 544L176 544C96.5 544 32 479.5 32 400C32 343.2 64.9 294.1 112.7 270.6C112.3 265.8 112 260.9 112 256z'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640' fill='white' opacity='0.1'%3E%3Cpath d='M112 256C112 167.6 183.6 96 272 96C319.1 96 361.4 116.4 390.7 148.7C401.3 145.6 412.5 144 424 144C490.3 144 544 197.7 544 264C544 277.2 541.9 289.9 537.9 301.8C579.5 322.9 608 366.1 608 416C608 486.7 550.7 544 480 544L176 544C96.5 544 32 479.5 32 400C32 343.2 64.9 294.1 112.7 270.6C112.3 265.8 112 260.9 112 256z'/%3E%3C/svg%3E");
+    background-position: 10% 15%, 50% 75%, 80% 45%;
+    background-size: 300px auto, 200px auto, 120px auto;
+    background-repeat: repeat-x;
+    z-index: -1;
+    animation: moveClouds 120s linear infinite;
+}
+.post-form{
+    width:100%;
+}
+
+.pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:6px;
+    margin:25px 0;
+    flex-wrap:wrap;
+}
+
+.pagination a,
+.pagination span{
+    padding:6px 10px;
+    border-radius:6px;
+    font-size:14px;
+    text-decoration:none;
+}
+
+.pagination a{
+    background:#f0f2f5;
+    color:#333;
+}
+
+.pagination a:hover{
+    background:#1da1f2;
+    color:white;
+}
+
+.pagination .current{
+    background:#1da1f2;
+    color:white;
+    font-weight:bold;
+}
+
+.pagination .dots{
+    padding:6px 4px;
+    color:#888;
+}
+
+@keyframes moveClouds {
+    from { background-position: 0% 15%, 0% 75%, 0% 45%; }
+    to { background-position: 2000px 15%, 1200px 75%, 800px 45%; }
+}
+
+/* PC表示（幅821px以上）では三本線ボタンを隠す */
+@media screen and (min-width: 821px) {
+    .menu-btn {
+        display: none;
+    }
+}
+
+/* --- 2. スマホ・タブレット用の設定 (幅820px以下) --- */
+@media screen and (max-width: 820px) {
+
+    .left {
+        position: fixed;
+        top: 0;
+        left: -350px;
+        width: 260px;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 60px 20px 20px;
+    }
+
+    .left.open {
+        left: 0;
+        box-shadow: 10px 0 25px rgba(0,0,0,0.1);
+    }
+
+    .right {
+        margin-left: 0;
+        padding: 15px;
+        width: 100%;
+        max-width:100%;
+    }
+
+    .menu-btn {
+        display: block;
+    }
+
+    .menu-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 999;
+    }
+   
+    .menu-overlay.show {
+        display: block;
+    }
+
+    .close-menu {
+        display: block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .mypage_icon{
+        width:120px;
+        height:120px;
+    }
+
+    .profile_tabs{
+        font-size:14px;
+    }
+
+    /* アイコン周りの調整 */
+    .day a span:not(.fav-count):not(.rp-count) {
+        display: none;
+    }
+   
+    .day {
+        justify-content: space-around;
+        gap: 5px;
+    }
+
+    .day a:first-child {
+        font-size: 0.75em;
+    }
+
+    .msg img[width="200"] {
+        max-width: 100%;
+        max-width:400px;
+        height:auto;
+    }
+
+    .post-form{
+    padding:15px;
+    }
+
+    textarea{
+        font-size:16px;
+    }
+}
+
+*{
+box-sizing:border-box;
+}
+
+html,body{
+overflow-x:hidden;
+}
