@@ -1,7 +1,5 @@
 # 💬 SNSアプリ
 
-![トップ画面](images/sns.jpg)
-
 ## 概要
 
 PHP・MySQLを使用して開発した投稿型のSNSアプリです。
